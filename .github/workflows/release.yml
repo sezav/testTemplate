@@ -16,11 +16,14 @@ jobs:
         uses: actions/checkout@v4
 
         # скачиваем ресурсы с облака
-      - name: Download resources from Google Drive
-        shell: pwsh
-        run: |
-          python -m pip install --quiet --disable-pip-version-check gdown
-          python -m gdown --folder "https://drive.google.com/drive/folders/1xlyLjaAZCGDY4fByLub-mwF4EIwDijip?usp=drive_link" -O "test_template\RevitStartup\bin\x64\R2022\net48"
+        - name: Download resources from Google Drive
+          shell: pwsh
+          # если пакет протух ищи в репозитории скрипт Download-GoogleDriveFiles.ps1
+          env:
+            PYTHONIOENCODING: "utf-8"
+          run: |
+            python -m pip install --quiet --disable-pip-version-check gdown
+            python -m gdown "https://drive.google.com/drive/folders/1xlyLjaAZCGDY4fByLub-mwF4EIwDijip?usp=drive_link" -O "test_template\RevitStartup\bin\x64\R2022\net48"
 
       - name: Ensure WiX Toolset v3.x is installed
         run: choco upgrade wixtoolset -y --no-progress
