@@ -66,6 +66,7 @@
 					 Absent='allow'>
 				<Condition Level="1">REVIT2022_INSTALLED</Condition>
 				<ComponentGroupRef Id="PublishedComponentsRevit2022" />
+				<ComponentGroupRef Id="ResourcesRevit2022" />
 				<ComponentRef Id="cmpAddin2022"/>
 			</Feature>
 
