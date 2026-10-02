@@ -12,52 +12,7 @@
 
 		<UIRef Id="WixUI_InstallDir_test_template"/>
 
-		<PropertyRef Id="REVIT2019_INSTALLED"/>
-		<PropertyRef Id="REVIT2020_INSTALLED"/>
-		<PropertyRef Id="REVIT2021_INSTALLED"/>
 		<PropertyRef Id="REVIT2022_INSTALLED"/>
-		<PropertyRef Id="REVIT2023_INSTALLED"/>
-		<PropertyRef Id="REVIT2024_INSTALLED"/>
-		<PropertyRef Id="REVIT2025_INSTALLED"/>
-		<PropertyRef Id="REVIT2026_INSTALLED"/>
-		<PropertyRef Id="REVIT2027_INSTALLED"/>
-
-		<Feature Id="FeatureRevit"
-				 Title="Revit"
-				 Level="1"
-				 AllowAdvertise="no"
-				 Absent="allow"
-				 Display="expand">
-
-			<Feature Id="Feature19"
-				     Title="Revit 2019"
-				     Level="10"
-				     AllowAdvertise="no"
-				     Absent='allow'>
-				<Condition Level="1">REVIT2019_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2019" />
-				<ComponentRef Id="cmpAddin2019"/>
-			</Feature>
-			
-			<Feature Id="Feature20"
-				     Title="Revit 2020"
-				     Level="10"
-				     AllowAdvertise="no"
-				     Absent='allow'>
-				<Condition Level="1">REVIT2020_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2020" />
-				<ComponentRef Id="cmpAddin2020"/>
-			</Feature>
-
-			<Feature Id="Feature21"
-					 Title="Revit 2021"
-					 Level="10"
-					 AllowAdvertise="no"
-					 Absent='allow'>
-				<Condition Level="1">REVIT2021_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2021" />
-				<ComponentRef Id="cmpAddin2021"/>
-			</Feature>
 
 			<Feature Id="Feature22"
 					 Title="Revit 2022"
@@ -70,57 +25,6 @@
 				<ComponentRef Id="cmpAddin2022"/>
 			</Feature>
 
-			<Feature Id="Feature23"
-				 Title="Revit 2023"
-				 Level="10"
-				 AllowAdvertise="no"
-				 Absent='allow'>
-				<Condition Level="1">REVIT2023_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2023" />
-				<ComponentRef Id="cmpAddin2023"/>
-			</Feature>
-
-			<Feature Id="Feature24"
-				 Title="Revit 2024"
-				 Level="10"
-				 AllowAdvertise="no"
-				 Absent='allow'>
-				<Condition Level="1">REVIT2024_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2024" />
-				<ComponentRef Id="cmpAddin2024"/>
-			</Feature>
-
-			<Feature Id="Feature25"
-				 Title="Revit 2025"
-				 Level="10"
-				 AllowAdvertise="no"
-				 Absent='allow'>
-				<Condition Level="1">REVIT2025_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2025" />
-				<ComponentRef Id="cmpAddin2025"/>
-			</Feature>
-
-			<Feature Id="Feature26"
-				 Title="Revit 2026"
-				 Level="10"
-				 AllowAdvertise="no"
-				 Absent='allow'>
-				<Condition Level="1">REVIT2026_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2026" />
-				<ComponentRef Id="cmpAddin2026"/>
-			</Feature>
-
-			<Feature Id="Feature27"
-				 Title="Revit 2027"
-				 Level="10"
-				 AllowAdvertise="no"
-				 Absent='allow'>
-				<Condition Level="1">REVIT2027_INSTALLED</Condition>
-				<ComponentGroupRef Id="PublishedComponentsRevit2027" />
-				<ComponentRef Id="cmpAddin2027"/>
-			</Feature>
-			<ComponentRef Id="cmpRegisterVersion" />
-		</Feature>
 	</Product>
 
 	<Fragment>
@@ -130,59 +34,11 @@
 				<Directory Id="Autodesk" Name="Autodesk">
 					<Directory Id="Revit" Name="Revit">
 						<Directory Id="Addins" Name="Addins">
-							<Directory Id ="Folder2019" Name="2019">
-								<Directory Id="dll2019" Name="$(var.Name)">
-									<Directory Id="REVIT2019FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2019_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2020" Name="2020">
-								<Directory Id="dll2020" Name="$(var.Name)">
-									<Directory Id="REVIT2020FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2020_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2021" Name="2021">
-								<Directory Id="dll2021" Name="$(var.Name)">
-									<Directory Id="REVIT2021FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2021_ADDIN_FOLDER" />
-							</Directory>
 							<Directory Id ="Folder2022" Name="2022">
 								<Directory Id="dll2022" Name="$(var.Name)">
 									<Directory Id="REVIT2022FOLDER"/>
 								</Directory>
 								<Directory Id="REVIT2022_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2023" Name="2023">
-								<Directory Id="dll2023" Name="$(var.Name)">
-									<Directory Id="REVIT2023FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2023_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2024" Name="2024">
-								<Directory Id="dll2024" Name="$(var.Name)">
-									<Directory Id="REVIT2024FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2024_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2025" Name="2025">
-								<Directory Id="dll2025" Name="$(var.Name)">
-									<Directory Id="REVIT2025FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2025_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2026" Name="2026">
-								<Directory Id="dll2026" Name="$(var.Name)">
-									<Directory Id="REVIT2026FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2026_ADDIN_FOLDER" />
-							</Directory>
-							<Directory Id ="Folder2027" Name="2027">
-								<Directory Id="dll2027" Name="$(var.Name)">
-									<Directory Id="REVIT2027FOLDER"/>
-								</Directory>
-								<Directory Id="REVIT2027_ADDIN_FOLDER" />
 							</Directory>
 						</Directory>
 					</Directory>

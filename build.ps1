@@ -24,7 +24,7 @@ if (-not $msbuild) {
 #   BuildNET48 -> R2019;R2020;R2021;R2022;R2023;R2024 (net48)
 #   BuildNET8  -> R2025;R2026                          (net8.0-windows)
 #   BuildNET10 -> R2027                                (net10.0-windows)
-$metaConfigs = @("BuildNET48", "BuildNET8", "BuildNET10")
+$metaConfigs = @("R2022")
 
 $allOk = $true
 foreach ($cfg in $metaConfigs) {

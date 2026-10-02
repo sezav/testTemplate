@@ -3,57 +3,9 @@
 	<Fragment>
 		<?define DefaultSource = "..\RevitStartup\Manifest\test_template.addin"?>
 
-		<DirectoryRef Id="REVIT2019_ADDIN_FOLDER">
-			<Component Id="cmpAddin2019" Guid="{96B37069-2699-4F5A-BD42-69AA1FF47E2F}">
-				<File Id="fileAddin2019" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2020_ADDIN_FOLDER">
-			<Component Id="cmpAddin2020" Guid="{38481EC9-41C3-41E8-ADBF-461C5F434A75}">
-				<File Id="fileAddin2020" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2021_ADDIN_FOLDER">
-			<Component Id="cmpAddin2021" Guid="{7D2CC9D3-2867-44CA-8B0D-DF99F5915389}">
-				<File Id="fileAddin2021" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
 		<DirectoryRef Id="REVIT2022_ADDIN_FOLDER">
 			<Component Id="cmpAddin2022" Guid="{F02E0B97-31C6-4F8C-A2C7-976BCCDBD369}">
 				<File Id="fileAddin2022" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2023_ADDIN_FOLDER">
-			<Component Id="cmpAddin2023" Guid="{1508B7F7-E773-46D8-9C2C-266203AA6B09}">
-				<File Id="fileAddin2023" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2024_ADDIN_FOLDER">
-			<Component Id="cmpAddin2024" Guid="{2798120F-CEE4-4F57-AE25-3AE7B16D0D23}">
-				<File Id="fileAddin2024" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2025_ADDIN_FOLDER">
-			<Component Id="cmpAddin2025" Guid="{7B0E2C41-5E7B-412D-AC42-21AC72FF6715}">
-				<File Id="fileAddin2025" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2026_ADDIN_FOLDER">
-			<Component Id="cmpAddin2026" Guid="{EA22EB11-0E5F-4372-815C-64156A03C6FD}">
-				<File Id="fileAddin2026" KeyPath="yes" Source="$(var.DefaultSource)" />
-			</Component>
-		</DirectoryRef>
-
-		<DirectoryRef Id="REVIT2027_ADDIN_FOLDER">
-			<Component Id="cmpAddin2027" Guid="{BCFE6F9F-196A-4A87-A420-4070EDC6E470}">
-				<File Id="fileAddin2027" KeyPath="yes" Source="$(var.DefaultSource)" />
 			</Component>
 		</DirectoryRef>
 

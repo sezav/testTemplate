@@ -1,57 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
-		<Property Id="REVIT2019_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2019" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2019\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2020_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2020" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2020\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2021_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2021" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2021\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
 
 		<Property Id="REVIT2022_INSTALLED" Secure="yes">
 			<RegistrySearch Id="CheckREVIT2022" Root="HKLM"
 				Key="SOFTWARE\Autodesk\Revit\2022\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2023_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2023" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2023\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2024_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2024" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2024\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2025_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2025" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2025\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2026_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2026" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2026\REVIT-05:0419"
-				Name="InstallationLocation" Type="raw" Win64="yes"/>
-		</Property>
-
-		<Property Id="REVIT2027_INSTALLED" Secure="yes">
-			<RegistrySearch Id="CheckREVIT2027" Root="HKLM"
-				Key="SOFTWARE\Autodesk\Revit\2027\REVIT-05:0419"
 				Name="InstallationLocation" Type="raw" Win64="yes"/>
 		</Property>
 	</Fragment>
