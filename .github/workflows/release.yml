@@ -23,7 +23,7 @@ jobs:
           PYTHONIOENCODING: "utf-8"
         run: |
           python -m pip install --quiet --disable-pip-version-check gdown
-          python -m gdown "https://drive.google.com/drive/folders/1xlyLjaAZCGDY4fByLub-mwF4EIwDijip?usp=drive_link" -O "test_template\Resources"
+          python -m gdown "https://drive.google.com/drive/folders/1xlyLjaAZCGDY4fByLub-mwF4EIwDijip?usp=drive_link" -O "\Resources"
 
       - name: Ensure WiX Toolset v3.x is installed
         run: choco upgrade wixtoolset -y --no-progress
