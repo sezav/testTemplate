@@ -89,7 +89,7 @@
 		  BasePath2025=..\RevitStartup\bin\x64\R2025\net8.0-windows;
 		  BasePath2026=..\RevitStartup\bin\x64\R2026\net8.0-windows;
 		  BasePath2027=..\RevitStartup\bin\x64\R2027\net10.0-windows;
-		  ResourcesPath=..\Resources;
+		  ResourcesPath=..\test_template\Resources;
 	  </DefineConstants>
     </PropertyGroup>
     <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2019.wxs" DirectoryRefId="REVIT2019FOLDER" ComponentGroupName="PublishedComponentsRevit2019" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2019\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2019" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
@@ -102,7 +102,7 @@
     <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2026.wxs" DirectoryRefId="REVIT2026FOLDER" ComponentGroupName="PublishedComponentsRevit2026" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2026\net8.0-windows" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2026" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
     <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2027.wxs" DirectoryRefId="REVIT2027FOLDER" ComponentGroupName="PublishedComponentsRevit2027" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2027\net10.0-windows" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2027" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
 	<HeatDirectory OutputFile="Components\ComponentsResources2022.wxs"
-				Directory="..\Resources"
+				Directory="..\test_template\Resources"
 				DirectoryRefId="REVIT2022_RESOURCES"
 				ComponentGroupName="ResourcesRevit2022"
 				PreprocessorVariable="var.ResourcesPath"
