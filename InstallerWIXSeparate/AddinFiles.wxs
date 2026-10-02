@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<?define DefaultSource = "..\RevitStartup\Manifest\test_template.addin"?>
+
+		<?if $(var.REVIT_VERSION) = 2019 ?><?define AddinComponentGuid = "{96B37069-2699-4F5A-BD42-69AA1FF47E2F}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2020 ?><?define AddinComponentGuid = "{38481EC9-41C3-41E8-ADBF-461C5F434A75}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2021 ?><?define AddinComponentGuid = "{7D2CC9D3-2867-44CA-8B0D-DF99F5915389}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2022 ?><?define AddinComponentGuid = "{F02E0B97-31C6-4F8C-A2C7-976BCCDBD369}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2023 ?><?define AddinComponentGuid = "{1508B7F7-E773-46D8-9C2C-266203AA6B09}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2024 ?><?define AddinComponentGuid = "{2798120F-CEE4-4F57-AE25-3AE7B16D0D23}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2025 ?><?define AddinComponentGuid = "{7B0E2C41-5E7B-412D-AC42-21AC72FF6715}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2026 ?><?define AddinComponentGuid = "{EA22EB11-0E5F-4372-815C-64156A03C6FD}"?><?endif?>
+		<?if $(var.REVIT_VERSION) = 2027 ?><?define AddinComponentGuid = "{CBC8F0A6-AA96-4D7E-AF12-4A9964A7DFE0}"?><?endif?>
+
+		<DirectoryRef Id="REVIT$(var.REVIT_VERSION)_ADDIN_FOLDER">
+			<Component Id="cmpAddin$(var.REVIT_VERSION)" Guid="$(var.AddinComponentGuid)">
+				<File Id="fileAddin$(var.REVIT_VERSION)" KeyPath="yes" Source="$(var.DefaultSource)" />
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

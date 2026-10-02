@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>test_template</Name>
+    <Assembly>test_template\test_template.dll</Assembly>
+    <ClientId>EE5D3713-CEFD-4D27-BE0E-BEB38A50E4D8</ClientId>
+    <FullClassName>test_template.Application.ExternalApplication</FullClassName>
+    <VendorId>TiverGroup</VendorId>
+    <VendorDescription>tivergroup.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>

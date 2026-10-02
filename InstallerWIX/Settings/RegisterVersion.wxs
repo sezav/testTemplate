@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<Component Id="cmpRegisterVersion" Guid="{30D5B043-BE4E-43B2-BAEA-5BF2E43A7B17}" Directory="TARGETDIR" Win64="yes">
+			<RegistryKey Root="HKCU"
+						 Key="SOFTWARE\[Manufacturer]\[ProductName]">
+				<RegistryValue Type="string" Name="Version" Value="[ProductVersion]" KeyPath="yes" />
+			</RegistryKey>
+		</Component>
+	</Fragment>
+</Wix>

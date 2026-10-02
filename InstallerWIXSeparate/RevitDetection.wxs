@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<Property Id="REVIT$(var.REVIT_VERSION)_INSTALLED" Secure="yes">
+			<RegistrySearch Id="CheckREVIT$(var.REVIT_VERSION)" Root="HKLM"
+				Key="SOFTWARE\Autodesk\Revit\$(var.REVIT_VERSION)\REVIT-05:0419"
+				Name="InstallationLocation" Type="raw" Win64="yes"/>
+		</Property>
+	</Fragment>
+</Wix>

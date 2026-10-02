@@ -1,0 +1,153 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+		<ResolveNuGetPackages>true</ResolveNuGetPackages>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<Configurations>Debug;R2019;R2020;R2021;R2022;R2023;R2024;R2025;R2026;R2027;BuildNET48;BuildNET8;BuildNET10</Configurations>
+		<Platforms>x64</Platforms>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+		<Page Include="**\*.xaml" Exclude="**\*.user.xaml;**\*.designer.xaml" />
+		<Reference Include="System.Xaml" />
+	</ItemGroup>
+	<Choose>
+		<When Condition=" '$(Configuration)|$(Platform)' == 'BuildNET8|x64' ">
+			<PropertyGroup>
+				<UseWPF>false</UseWPF>
+				<TargetFramework>net8.0-windows</TargetFramework>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Configuration)|$(Platform)' == 'BuildNET10|x64' ">
+			<PropertyGroup>
+				<UseWPF>false</UseWPF>
+				<TargetFramework>net10.0-windows</TargetFramework>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Configuration)|$(Platform)' == 'R2027|x64' ">
+			<PropertyGroup>
+				<UseWPF>false</UseWPF>
+				<TargetFramework>net10.0-windows</TargetFramework>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Configuration)|$(Platform)' == 'R2026|x64' ">
+			<PropertyGroup>
+				<UseWPF>false</UseWPF>
+				<TargetFramework>net8.0-windows</TargetFramework>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Configuration)|$(Platform)' == 'R2025|x64' ">
+			<PropertyGroup>
+				<UseWPF>false</UseWPF>
+				<TargetFramework>net8.0-windows</TargetFramework>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<TargetFramework>net48</TargetFramework>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<ResolveNuGetPackages>true</ResolveNuGetPackages>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+	<PropertyGroup>
+		<!--    Ignore bad image build warning-->
+		<NoWarn>MSB3246</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!-- Forcibly set platform to 'x64' and ignore architecture-related problems -->
+		<PlatformTarget>x64</PlatformTarget>
+		<Platforms>x64</Platforms>
+		<Platform>x64</Platform>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+
+		<!-- Force the project to use the legacy debugger engine -->
+		<DebugEngines>{A87C008A-9B70-4A85-BCF6-FF280019F445}</DebugEngines>
+
+		<!-- Multiple targets can cause obj folder locking by concurrent builds -->
+		<BuildInParallel>false</BuildInParallel>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2022.*" Condition=" '$(Configuration)|$(Platform)' == 'BuildNET48|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2025.*" Condition=" '$(Configuration)|$(Platform)' == 'BuildNET8|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2027.*" Condition="'$(Configuration)|$(Platform)'=='BuildNET10|x64'">
+			<Version>2027.*</Version>
+			<PrivateAssets>All</PrivateAssets>
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2019.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2019|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2020.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2020|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2022.0.0" Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2022.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2022|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2023.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2023|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2024.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2024|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2025.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2025|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2026.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2026|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2027.0.0" Condition=" '$(Configuration)|$(Platform)' == 'R2027|x64' " PrivateAssets="All" ExcludeAssets="runtime" />
+		<PackageReference Include="TiverGroup.Logger" Version="3.0.2" />
+		<PackageReference Include="SimpleInjector" Version="5.6.0" />
+		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.45" PrivateAssets="all" />
+
+	</ItemGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'BuildNET48|x64' ">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+
+	<Target Name="BuildNET48" AfterTargets="Build" Condition="'$(Configuration)' == 'BuildNET48'">
+		<ItemGroup>
+			<AllConfigs Include="R2019;R2020;R2021;R2022;R2023;R2024" />
+		</ItemGroup>
+
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="Configuration=%(AllConfigs.Identity);Platform=x64" Targets="Restore;Build" BuildInParallel="false" />
+	</Target>
+
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'BuildNET8|x64' ">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BuildNET10|x64'">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+
+	<Target Name="BuildNET8" AfterTargets="Build" Condition="'$(Configuration)' == 'BuildNET8'">
+		<ItemGroup>
+			<AllConfigs Include="R2025;R2026" />
+		</ItemGroup>
+
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="Configuration=%(AllConfigs.Identity);Platform=x64" Targets="Restore;Build" BuildInParallel="false" />
+	</Target>
+
+	<Target Name="BuildNET10" AfterTargets="Build" Condition="'$(Configuration)' == 'BuildNET10'">
+		<ItemGroup>
+			<AllConfigs Include="R2027" />
+		</ItemGroup>
+
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="Configuration=%(AllConfigs.Identity);Platform=x64" Targets="Restore;Build" BuildInParallel="false" />
+	</Target>
+
+	<Target Name="CopyOutputToInstallerBin" AfterTargets="Build" DependsOnTargets="MergeLoggerAssembly" Condition="$(Configuration.StartsWith('R'))">
+		<ItemGroup>
+			<OutputFilesToCopy Include="$(TargetDir)**\*.*" />
+		</ItemGroup>
+
+		<Copy SourceFiles="@(OutputFilesToCopy)"
+			  DestinationFolder="..\RevitStartup\bin\x64\$(Configuration)\$(TargetFramework)\%(RecursiveDir)"
+			  SkipUnchangedFiles="true" />
+	</Target>
+</Project>

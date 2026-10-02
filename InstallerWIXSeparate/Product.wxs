@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<?if $(var.REVIT_VERSION) = 2019 ?><?define ProductUpgradeCode = "{C31B32F8-8CB5-4995-9516-9BBE97A53DC1}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2020 ?><?define ProductUpgradeCode = "{A745DC46-5262-4224-9FCC-8CA63F797005}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2021 ?><?define ProductUpgradeCode = "{06D133BD-27D2-498A-8FD9-313E3ACC5569}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2022 ?><?define ProductUpgradeCode = "{4292B06D-BB74-465D-A75E-E876F067E6F3}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2023 ?><?define ProductUpgradeCode = "{25AE1ABE-4DC7-472F-A0DC-0904341F5879}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2024 ?><?define ProductUpgradeCode = "{6ED2A0D5-AC15-4B74-A022-55EF821DA3E3}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2025 ?><?define ProductUpgradeCode = "{9EBD7104-DDDC-4457-9360-406019156C7D}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2026 ?><?define ProductUpgradeCode = "{B80BB6E4-5D3C-47E9-A4C1-073A45DE7035}"?><?endif?>
+	<?if $(var.REVIT_VERSION) = 2027 ?><?define ProductUpgradeCode = "{ED525E41-779C-4AAE-B517-947EF08994C5}"?><?endif?>
+
+	<Product Id="*" Name="test_template Revit $(var.REVIT_VERSION)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Tiver/Virtex" UpgradeCode="$(var.ProductUpgradeCode)">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
+					  AllowSameVersionUpgrades="yes"
+					  Schedule="afterInstallInitialize"/>
+		<Media Id="1"
+           Cabinet="media.cab"
+           EmbedCab="yes" />
+
+		<UIRef Id="WixUI_InstallDir_test_template"/>
+
+		<PropertyRef Id="REVIT$(var.REVIT_VERSION)_INSTALLED"/>
+
+		<Feature Id="FeatureRevit"
+				 Title="Revit $(var.REVIT_VERSION)"
+				 Level="1"
+				 AllowAdvertise="no"
+				 Absent="allow"
+				 Display="expand">
+			<Condition Level="1">REVIT$(var.REVIT_VERSION)_INSTALLED</Condition>
+			<ComponentGroupRef Id="PublishedComponentsRevit$(var.REVIT_VERSION)" />
+			<ComponentRef Id="cmpAddin$(var.REVIT_VERSION)"/>
+			<ComponentRef Id="cmpRegisterVersion" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<?define Name="test_template"?>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="AppDataFolder">
+				<Directory Id="Autodesk" Name="Autodesk">
+					<Directory Id="Revit" Name="Revit">
+						<Directory Id="Addins" Name="Addins">
+							<Directory Id="RevitYearFolder" Name="$(var.REVIT_VERSION)">
+								<Directory Id="RevitAddinDllFolder" Name="$(var.Name)">
+									<Directory Id="REVIT$(var.REVIT_VERSION)FOLDER"/>
+								</Directory>
+								<Directory Id="REVIT$(var.REVIT_VERSION)_ADDIN_FOLDER" />
+							</Directory>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+</Wix>

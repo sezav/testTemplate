@@ -1,0 +1,29 @@
+<Project>
+	<!--
+		Сливает Logger.dll (TiverGroup.Logger) внутрь выходной сборки этого плагина,
+		чтобы LoggerService.Loggers (статическое поле пакета) был приватен для каждого
+		плагина отдельно, а не общим на весь процесс Revit между разными аддинами.
+	-->
+	<Target Name="MergeLoggerAssembly" AfterTargets="Build" Condition="Exists('$(OutputPath)Logger.dll')">
+		<ItemGroup>
+			<LoggerMergeInputs Include="$(OutputPath)$(TargetName)$(TargetExt)" />
+			<LoggerMergeInputs Include="$(OutputPath)Logger.dll" />
+
+			<LoggerMergeLibraryPath Include="$(OutputPath)" />
+			<LoggerMergeLibraryPath Include="%(ResolvedTargetingPack.Path)" />
+			<LoggerMergeLibraryPath Include="@(ReferencePath->'%(RootDir)%(Directory)')" />
+		</ItemGroup>
+
+		<ILRepack
+			Parallel="true"
+			DebugInfo="true"
+			Internalize="true"
+			InputAssemblies="@(LoggerMergeInputs)"
+			LibraryPath="@(LoggerMergeLibraryPath)"
+			TargetKind="SameAsPrimaryAssembly"
+			OutputFile="$(OutputPath)$(TargetName)$(TargetExt)"
+		/>
+
+		<Delete Files="$(OutputPath)Logger.dll" />
+	</Target>
+</Project>

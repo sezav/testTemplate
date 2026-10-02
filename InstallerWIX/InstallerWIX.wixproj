@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.10</ProductVersion>
+    <ProjectGuid>ebd137a3-01fd-4f0b-9e20-0823450a8136</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>InstallerWIX</OutputName>
+    <OutputType>Package</OutputType>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" Condition="Exists('$(MSBuildThisFileDirectory)..\Directory.Build.props')" />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+    <SuppressValidation>True</SuppressValidation>
+    <Cultures>ru-RU</Cultures>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SuppressValidation>True</SuppressValidation>
+    <Cultures>ru-RU</Cultures>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AddinFiles.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2019.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2020.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2021.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2022.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2023.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2024.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2025.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2026.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit2027.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="RevitDetection.wxs" />
+    <Compile Include="Settings\RegisterVersion.wxs" />
+    <Compile Include="WIX_UI.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components" />
+    <Folder Include="Settings" />
+    <Folder Include="Tiver_Assets\" />
+    <Folder Include="Virtex_Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tiver_Assets\BannerImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tiver_Assets\DialogImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Virtex_Assets\BannerImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Virtex_Assets\DialogImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <Error Text="The WiX Toolset v3.11 build tools must be installed to build this project. To download the WiX Toolset, see https://wixtoolset.org/releases/v3.11/stable" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <PropertyGroup>
+      <DefineConstants>
+		  ProductVersion=$(Version);
+		  BasePath2019=..\RevitStartup\bin\x64\R2019\net48;
+		  BasePath2020=..\RevitStartup\bin\x64\R2020\net48;
+		  BasePath2021=..\RevitStartup\bin\x64\R2021\net48;
+		  BasePath2022=..\RevitStartup\bin\x64\R2022\net48;
+		  BasePath2023=..\RevitStartup\bin\x64\R2023\net48;
+		  BasePath2024=..\RevitStartup\bin\x64\R2024\net48;
+		  BasePath2025=..\RevitStartup\bin\x64\R2025\net8.0-windows;
+		  BasePath2026=..\RevitStartup\bin\x64\R2026\net8.0-windows;
+		  BasePath2027=..\RevitStartup\bin\x64\R2027\net10.0-windows;
+	  </DefineConstants>
+    </PropertyGroup>
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2019.wxs" DirectoryRefId="REVIT2019FOLDER" ComponentGroupName="PublishedComponentsRevit2019" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2019\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2019" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2020.wxs" DirectoryRefId="REVIT2020FOLDER" ComponentGroupName="PublishedComponentsRevit2020" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2020\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2020" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2021.wxs" DirectoryRefId="REVIT2021FOLDER" ComponentGroupName="PublishedComponentsRevit2021" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2021\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2021" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2022.wxs" DirectoryRefId="REVIT2022FOLDER" ComponentGroupName="PublishedComponentsRevit2022" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2022\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2022" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2023.wxs" DirectoryRefId="REVIT2023FOLDER" ComponentGroupName="PublishedComponentsRevit2023" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2023\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2023" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2024.wxs" DirectoryRefId="REVIT2024FOLDER" ComponentGroupName="PublishedComponentsRevit2024" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2024\net48" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2024" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2025.wxs" DirectoryRefId="REVIT2025FOLDER" ComponentGroupName="PublishedComponentsRevit2025" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2025\net8.0-windows" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2025" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2026.wxs" DirectoryRefId="REVIT2026FOLDER" ComponentGroupName="PublishedComponentsRevit2026" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2026\net8.0-windows" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2026" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit2027.wxs" DirectoryRefId="REVIT2027FOLDER" ComponentGroupName="PublishedComponentsRevit2027" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R2027\net10.0-windows" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath2027" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+  </Target>
+</Project>

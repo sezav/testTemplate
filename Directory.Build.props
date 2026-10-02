@@ -1,0 +1,11 @@
+<Project>
+	<PropertyGroup>
+		<Version>1.0.0.0</Version>
+		<Copyright>Copyright ©  2026</Copyright>
+		<Company>TiverGroup</Company>
+		<Product>test_template</Product>
+
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+	</PropertyGroup>
+</Project>

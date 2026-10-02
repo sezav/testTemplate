@@ -1,0 +1,84 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+        # скачиваем ресурсы с облака
+      - name: Download resources from Google Drive
+        shell: pwsh
+        run: |
+          python -m pip install --quiet --disable-pip-version-check gdown
+          python -m gdown --folder "https://drive.google.com/drive/folders/1xlyLjaAZCGDY4fByLub-mwF4EIwDijip?usp=drive_link" -O "test_template\RevitStartup\bin\x64\R2022\net48" --remaining-ok
+
+      - name: Ensure WiX Toolset v3.x is installed
+        run: choco upgrade wixtoolset -y --no-progress
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Read version from Directory.Build.props
+        id: version
+        shell: pwsh
+        run: |
+          [xml]$xml = Get-Content "Directory.Build.props"
+          $version = $xml.Project.PropertyGroup.Version
+          if (-not $version) { throw "Version not found in Directory.Build.props" }
+          Write-Host "Version: $version"
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "tag=v$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Build solution and installer
+        shell: pwsh
+        run: ./build.ps1
+
+      - name: Locate MSI
+        id: msi
+        shell: pwsh
+        run: |
+          $msi = Get-ChildItem "InstallerWIX\bin\Release\*.msi" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $msi) { throw "MSI not found in InstallerWIX\bin\Release" }
+          Write-Host "MSI: $($msi.FullName)"
+          "path=$($msi.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Check for existing release
+        id: check
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ steps.version.outputs.tag }}"
+          gh release view $tag 2>$null
+          $exists = ($LASTEXITCODE -eq 0)
+          if ($exists) {
+            Write-Host "Release $tag already exists, skipping creation. Bump <Version> in Directory.Build.props to publish a new release."
+          } else {
+            Write-Host "Release $tag does not exist yet, will be created."
+          }
+          "exists=$($exists.ToString().ToLower())" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          exit 0
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.exists == 'false'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" "${{ steps.msi.outputs.path }}" `
+            --title "Project1 ${{ steps.version.outputs.version }}" `
+            --generate-notes

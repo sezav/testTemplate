@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.10</ProductVersion>
+    <ProjectGuid>ff97ba43-fcf7-432e-8bf6-aed2ea2521ce</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <RevitVersion Condition="'$(RevitVersion)' == ''">2023</RevitVersion>
+    <OutputType>Package</OutputType>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" Condition="Exists('$(MSBuildThisFileDirectory)..\Directory.Build.props')" />
+  <PropertyGroup>
+    <OutputName>test_template $(Version) Revit $(RevitVersion) setup</OutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+    <SuppressValidation>True</SuppressValidation>
+    <Cultures>ru-RU</Cultures>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SuppressValidation>True</SuppressValidation>
+    <Cultures>ru-RU</Cultures>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AddinFiles.wxs" />
+    <Compile Include="Components\ComponentsGenerationRevit$(RevitVersion).wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="RevitDetection.wxs" />
+    <Compile Include="Settings\RegisterVersion.wxs" />
+    <Compile Include="WIX_UI.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components" />
+    <Folder Include="Settings" />
+    <Folder Include="Tiver_Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tiver_Assets\BannerImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tiver_Assets\DialogImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <Error Text="The WiX Toolset v3.11 build tools must be installed to build this project. To download the WiX Toolset, see https://wixtoolset.org/releases/v3.11/stable" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <PropertyGroup>
+	<BaseNetPath Condition="'$(RevitVersion)'=='2025' Or '$(RevitVersion)'=='2026'">net8.0-windows</BaseNetPath>
+	<BaseNetPath Condition="'$(RevitVersion)'=='2027'">net10.0-windows</BaseNetPath>
+	<BaseNetPath Condition="'$(RevitVersion)'!='2025' And '$(RevitVersion)'!='2026' And '$(RevitVersion)'!='2027'">net48</BaseNetPath>
+      <DefineConstants>
+		  ProductVersion=$(Version);
+		  REVIT_VERSION=$(RevitVersion);
+		  BasePath=..\RevitStartup\bin\x64\R$(RevitVersion)\$(BaseNetPath);
+	  </DefineConstants>
+    </PropertyGroup>
+    <HeatDirectory OutputFile="Components\ComponentsGenerationRevit$(RevitVersion).wxs" DirectoryRefId="REVIT$(RevitVersion)FOLDER" ComponentGroupName="PublishedComponentsRevit$(RevitVersion)" SuppressCom="true" Directory="..\RevitStartup\bin\x64\R$(RevitVersion)\$(BaseNetPath)" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BasePath" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
+  </Target>
+</Project>
