@@ -1,0 +1,26 @@
+name: Revit task summary
+description: Добавляет итог задачи RevitWorker в Step Summary
+
+inputs:
+  report-file:
+    description: JSON-отчёт, который пишет revit-wait-task
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Summary
+      shell: bash
+      env:
+        REPORT_FILE: ${{ inputs.report-file }}
+      run: |
+        f="${REPORT_FILE:-$RUNNER_TEMP/revit-task.json}"
+        [ -f "$f" ] || exit 0
+        {
+          echo "### Revit task"
+          echo ""
+          echo "| Id | Версия | Статус | Ошибка |"
+          echo "|---|---|---|---|"
+          jq -r '"| \(.id) | \(if .revitVersion == "" then "любая" else .revitVersion end) | \(.status) | \(.error | gsub("\\|"; "\\\\|") | gsub("\n"; " ")) |"' "$f"
+        } >> "$GITHUB_STEP_SUMMARY"

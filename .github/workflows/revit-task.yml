@@ -1,0 +1,118 @@
+name: Revit task
+
+# Создаёт задачу на сервере RevitWorker и ждёт её завершения.
+# Требуемые секреты:
+#   REVIT_API_URL      — базовый адрес сервера без /api, например http://host:8080
+#   REVIT_API_EMAIL    — email пользователя веб-панели
+#   REVIT_API_PASSWORD — пароль этого пользователя
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_url:
+        description: Путь/URL исходной модели (URLSourcePath)
+        required: true
+        type: string
+      upload_url:
+        description: URL для выгрузки результата (UploadURL). Если задан — ждём Done, иначе Updated
+        required: false
+        type: string
+        default: ""
+      revit_version:
+        description: Версия Revit, например 2024 (пусто — любой воркер)
+        required: false
+        type: string
+        default: ""
+      timeout_minutes:
+        description: Сколько минут ждать завершения
+        required: false
+        type: number
+        default: 120
+      poll_seconds:
+        description: Интервал опроса статуса, секунд
+        required: false
+        type: number
+        default: 30
+  workflow_call:
+    inputs:
+      source_url:
+        required: true
+        type: string
+      upload_url:
+        required: false
+        type: string
+        default: ""
+      revit_version:
+        required: false
+        type: string
+        default: ""
+      timeout_minutes:
+        required: false
+        type: number
+        default: 120
+      poll_seconds:
+        required: false
+        type: number
+        default: 30
+    secrets:
+      REVIT_API_URL:
+        required: true
+      REVIT_API_EMAIL:
+        required: true
+      REVIT_API_PASSWORD:
+        required: true
+    outputs:
+      task_id:
+        description: Id созданной задачи
+        value: ${{ jobs.run-task.outputs.task_id }}
+      status:
+        description: Последний статус задачи
+        value: ${{ jobs.run-task.outputs.status }}
+
+jobs:
+  run-task:
+    runs-on: ubuntu-latest
+    # Выражения GitHub не умеют в арифметику, поэтому лимит job фиксированный (максимум для hosted-раннеров);
+    # реальный таймаут ожидания контролирует скрипт через inputs.timeout_minutes.
+    timeout-minutes: 360
+    outputs:
+      task_id: ${{ steps.create.outputs.task-id }}
+      status: ${{ steps.wait.outputs.status }}
+    steps:
+      # Composite actions лежат в этом репозитории. При workflow_call из другого репо
+      # "./" указывает на репо вызывающего, поэтому явно забираем sezav/testTemplate
+      # (если репозиторий приватный, вызывающему нужен к нему доступ).
+      - name: Checkout actions
+        uses: actions/checkout@v4
+        with:
+          repository: sezav/testTemplate
+          path: .revit-actions
+          sparse-checkout: .github/actions
+
+      - name: Create task
+        id: create
+        uses: ./.revit-actions/.github/actions/revit-create-task
+        with:
+          api-url: ${{ secrets.REVIT_API_URL }}
+          email: ${{ secrets.REVIT_API_EMAIL }}
+          password: ${{ secrets.REVIT_API_PASSWORD }}
+          source-url: ${{ inputs.source_url }}
+          upload-url: ${{ inputs.upload_url }}
+          revit-version: ${{ inputs.revit_version }}
+
+      - name: Wait for task
+        id: wait
+        uses: ./.revit-actions/.github/actions/revit-wait-task
+        with:
+          api-url: ${{ secrets.REVIT_API_URL }}
+          email: ${{ secrets.REVIT_API_EMAIL }}
+          password: ${{ secrets.REVIT_API_PASSWORD }}
+          task-id: ${{ steps.create.outputs.task-id }}
+          upload-url: ${{ inputs.upload_url }}
+          revit-version: ${{ inputs.revit_version }}
+          timeout-minutes: ${{ inputs.timeout_minutes }}
+          poll-seconds: ${{ inputs.poll_seconds }}
+
+      - name: Summary
+        if: always()
+        uses: ./.revit-actions/.github/actions/revit-task-summary

@@ -1,0 +1,22 @@
+name: Setup build tools
+description: Ставит WiX Toolset v3.x и .NET SDK
+
+inputs:
+  dotnet-version:
+    description: Версии .NET SDK (по одной на строку)
+    required: false
+    default: |
+      8.0.x
+      10.0.x
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure WiX Toolset v3.x is installed
+      shell: pwsh
+      run: choco upgrade wixtoolset -y --no-progress
+
+    - name: Setup .NET SDKs
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}

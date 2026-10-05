@@ -1,0 +1,72 @@
+name: Revit create task
+description: Логинится в RevitWorker и создаёт задачу
+
+inputs:
+  api-url:
+    description: Базовый адрес сервера без /api, например http://host:8080
+    required: true
+  email:
+    description: Email пользователя веб-панели
+    required: true
+  password:
+    description: Пароль пользователя
+    required: true
+  source-url:
+    description: Путь/URL исходной модели (URLSourcePath)
+    required: true
+  upload-url:
+    description: URL для выгрузки результата (UploadURL)
+    required: false
+    default: ""
+  revit-version:
+    description: Версия Revit (пусто — любой воркер)
+    required: false
+    default: ""
+
+outputs:
+  task-id:
+    description: Id созданной задачи
+    value: ${{ steps.create.outputs.task_id }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create task
+      id: create
+      shell: bash
+      env:
+        API_URL: ${{ inputs.api-url }}
+        API_EMAIL: ${{ inputs.email }}
+        API_PASSWORD: ${{ inputs.password }}
+        SOURCE_URL: ${{ inputs.source-url }}
+        UPLOAD_URL: ${{ inputs.upload-url }}
+        REVIT_VERSION: ${{ inputs.revit-version }}
+      run: |
+        set -euo pipefail
+        source "$GITHUB_ACTION_PATH/../_revit-lib/revit-api.sh"
+
+        login
+
+        body=$(jq -n \
+          --arg src "$SOURCE_URL" \
+          --arg up "$UPLOAD_URL" \
+          --arg ver "$REVIT_VERSION" \
+          '{urlSourcePath: $src,
+            uploadURL: (if $up == "" then null else $up end),
+            revitVersion: (if $ver == "" then null else $ver end)}')
+
+        if ! resp=$(curl -sS --fail-with-body --retry 3 \
+            -H "Authorization: Bearer $TOKEN" \
+            -H 'Content-Type: application/json' \
+            -d "$body" "$API/api/tasks"); then
+          echo "::error::Не удалось создать задачу: $resp"
+          exit 1
+        fi
+
+        TASK_ID=$(jq -r '.id // empty' <<<"$resp")
+        if [ -z "$TASK_ID" ]; then
+          echo "::error::Ответ создания задачи не содержит id: $resp"
+          exit 1
+        fi
+        echo "task_id=$TASK_ID" >> "$GITHUB_OUTPUT"
+        echo "Создана задача #$TASK_ID"

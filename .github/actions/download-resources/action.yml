@@ -1,0 +1,25 @@
+name: Download resources
+description: Скачивает папку с Google Drive через gdown
+
+inputs:
+  folder-url:
+    description: Ссылка на папку Google Drive
+    required: true
+  output-dir:
+    description: Куда положить файлы
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download resources from Google Drive
+      shell: pwsh
+      # если пакет протух ищи в репозитории скрипт Download-GoogleDriveFiles.ps1
+      env:
+        PYTHONIOENCODING: "utf-8"
+        FOLDER_URL: ${{ inputs.folder-url }}
+        OUTPUT_DIR: ${{ inputs.output-dir }}
+      run: |
+        python -m pip install --quiet --disable-pip-version-check gdown
+        python -m gdown $env:FOLDER_URL -O $env:OUTPUT_DIR
+        if ($LASTEXITCODE -ne 0) { throw "gdown failed with exit code $LASTEXITCODE" }

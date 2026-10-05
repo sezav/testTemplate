@@ -1,0 +1,130 @@
+name: Revit wait task
+description: Ждёт завершения задачи RevitWorker и пишет итог в $RUNNER_TEMP/revit-task.json
+
+inputs:
+  api-url:
+    description: Базовый адрес сервера без /api
+    required: true
+  email:
+    description: Email пользователя (для повторного входа при истечении токена)
+    required: true
+  password:
+    description: Пароль пользователя
+    required: true
+  task-id:
+    description: Id задачи
+    required: true
+  upload-url:
+    description: Если задан — ждём Done, иначе Updated
+    required: false
+    default: ""
+  revit-version:
+    description: Версия Revit (только для отчёта)
+    required: false
+    default: ""
+  timeout-minutes:
+    description: Сколько минут ждать завершения
+    required: false
+    default: "120"
+  poll-seconds:
+    description: Интервал опроса статуса, секунд
+    required: false
+    default: "30"
+
+outputs:
+  status:
+    description: Последний статус задачи
+    value: ${{ steps.wait.outputs.status }}
+
+runs:
+  using: composite
+  steps:
+    - name: Wait for task
+      id: wait
+      shell: bash
+      env:
+        API_URL: ${{ inputs.api-url }}
+        API_EMAIL: ${{ inputs.email }}
+        API_PASSWORD: ${{ inputs.password }}
+        TASK_ID: ${{ inputs.task-id }}
+        UPLOAD_URL: ${{ inputs.upload-url }}
+        REVIT_VERSION: ${{ inputs.revit-version }}
+        TIMEOUT_MINUTES: ${{ inputs.timeout-minutes }}
+        POLL_SECONDS: ${{ inputs.poll-seconds }}
+      run: |
+        set -euo pipefail
+        source "$GITHUB_ACTION_PATH/../_revit-lib/revit-api.sh"
+
+        login
+
+        # С UploadURL задача завершается статусом Done (после DriveUploader),
+        # без него финальный успешный статус — Updated.
+        if [ -n "$UPLOAD_URL" ]; then TARGET="Done"; else TARGET="Updated"; fi
+        echo "Ожидаем статус $TARGET (таймаут ${TIMEOUT_MINUTES} мин, опрос раз в ${POLL_SECONDS} с)"
+
+        deadline=$(( $(date +%s) + TIMEOUT_MINUTES * 60 ))
+        status=""
+        last_status=""
+        error=""
+        failures=0
+        relogged=0
+        tmp=$(mktemp)
+
+        finish() {
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          jq -n --arg id "$TASK_ID" --arg ver "$REVIT_VERSION" --arg st "$status" --arg err "$error" \
+            '{id: $id, revitVersion: $ver, status: $st, error: $err}' > "$RUNNER_TEMP/revit-task.json"
+        }
+        trap finish EXIT
+
+        while :; do
+          code=$(curl -sS -o "$tmp" -w '%{http_code}' \
+            -H "Authorization: Bearer $TOKEN" \
+            "$API/api/tasks/$TASK_ID" || true)
+
+          if [ "$code" = "401" ] && [ "$relogged" -eq 0 ]; then
+            echo "Токен истёк, повторный вход"
+            login
+            relogged=1
+            continue
+          fi
+
+          if [ "$code" != "200" ]; then
+            failures=$(( failures + 1 ))
+            echo "::warning::Ошибка запроса статуса (HTTP $code), попытка $failures/5"
+            if [ "$failures" -ge 5 ]; then
+              echo "::error::Сервер недоступен: $(cat "$tmp" 2>/dev/null || true)"
+              exit 1
+            fi
+          else
+            failures=0
+            status=$(jq -r '.status // empty' "$tmp")
+            error=$(jq -r '.error // empty' "$tmp")
+            claimed=$(jq -r '.claimedBy // "-"' "$tmp")
+
+            if [ "$status" != "$last_status" ]; then
+              echo "$(date -u +%H:%M:%S) статус: $status (воркер: $claimed)"
+              last_status="$status"
+            fi
+
+            if [ "$status" = "$TARGET" ]; then
+              echo "Задача #$TASK_ID завершена со статусом $status"
+              exit 0
+            fi
+            if [ "$status" = "Canceled" ]; then
+              echo "::error::Задача #$TASK_ID отменена: ${error:-без описания}"
+              exit 1
+            fi
+          fi
+
+          if [ "$(date +%s)" -ge "$deadline" ]; then
+            msg="Таймаут ожидания задачи #$TASK_ID, последний статус: ${status:-неизвестен}"
+            if [ "$TARGET" = "Done" ] && [ "$status" = "Updated" ]; then
+              msg="$msg. Модель сохранена, но выгрузка не завершилась — проверьте логи DriveUploader"
+            fi
+            echo "::error::$msg"
+            exit 1
+          fi
+
+          sleep "$POLL_SECONDS"
+        done

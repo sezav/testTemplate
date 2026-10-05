@@ -1,0 +1,37 @@
+name: Build installer
+description: Собирает решение и MSI-установщик, возвращает путь к MSI
+
+inputs:
+  build-script:
+    description: Скрипт сборки
+    required: false
+    default: ./build.ps1
+  msi-glob:
+    description: Маска поиска собранного MSI
+    required: false
+    default: InstallerWIX\bin\Release\*.msi
+
+outputs:
+  msi-path:
+    description: Полный путь к MSI
+    value: ${{ steps.msi.outputs.path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Build solution and installer
+      shell: pwsh
+      env:
+        BUILD_SCRIPT: ${{ inputs.build-script }}
+      run: '& $env:BUILD_SCRIPT'
+
+    - name: Locate MSI
+      id: msi
+      shell: pwsh
+      env:
+        MSI_GLOB: ${{ inputs.msi-glob }}
+      run: |
+        $msi = Get-ChildItem $env:MSI_GLOB -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $msi) { throw "MSI not found: $env:MSI_GLOB" }
+        Write-Host "MSI: $($msi.FullName)"
+        "path=$($msi.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8

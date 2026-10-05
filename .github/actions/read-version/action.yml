@@ -1,0 +1,32 @@
+name: Read version
+description: Читает <Version> из Directory.Build.props
+
+inputs:
+  props-file:
+    description: Путь к props-файлу
+    required: false
+    default: Directory.Build.props
+
+outputs:
+  version:
+    description: Версия, например 1.2.3
+    value: ${{ steps.version.outputs.version }}
+  tag:
+    description: Тег релиза, например v1.2.3
+    value: ${{ steps.version.outputs.tag }}
+
+runs:
+  using: composite
+  steps:
+    - name: Read version from props
+      id: version
+      shell: pwsh
+      env:
+        PROPS_FILE: ${{ inputs.props-file }}
+      run: |
+        [xml]$xml = Get-Content $env:PROPS_FILE
+        $version = $xml.Project.PropertyGroup.Version
+        if (-not $version) { throw "Version not found in $env:PROPS_FILE" }
+        Write-Host "Version: $version"
+        "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+        "tag=v$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8

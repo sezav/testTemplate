@@ -1,0 +1,53 @@
+name: Publish release
+description: Создаёт GitHub Release с файлом, если релиза с таким тегом ещё нет
+
+inputs:
+  tag:
+    description: Тег релиза
+    required: true
+  title:
+    description: Заголовок релиза
+    required: true
+  asset:
+    description: Путь к прикладываемому файлу
+    required: true
+  token:
+    description: Токен для gh
+    required: true
+
+outputs:
+  created:
+    description: true, если релиз был создан
+    value: ${{ steps.check.outputs.exists == 'false' }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check for existing release
+      id: check
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        TAG: ${{ inputs.tag }}
+      run: |
+        gh release view $env:TAG 2>$null
+        $exists = ($LASTEXITCODE -eq 0)
+        if ($exists) {
+          Write-Host "Release $env:TAG already exists, skipping creation. Bump <Version> in Directory.Build.props to publish a new release."
+        } else {
+          Write-Host "Release $env:TAG does not exist yet, will be created."
+        }
+        "exists=$($exists.ToString().ToLower())" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+        exit 0
+
+    - name: Create GitHub Release
+      if: steps.check.outputs.exists == 'false'
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        TAG: ${{ inputs.tag }}
+        TITLE: ${{ inputs.title }}
+        ASSET: ${{ inputs.asset }}
+      run: |
+        gh release create $env:TAG $env:ASSET --title $env:TITLE --generate-notes
+        if ($LASTEXITCODE -ne 0) { throw "gh release create failed" }
